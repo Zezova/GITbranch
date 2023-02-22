@@ -1,0 +1,68 @@
+1.	На локальном репозитории сделать ветки для:
+git clone git@github.com:Zezova/GITbranch.git
+cd GITbranch/
+- Postman
+git branch Postman
+- Jmeter
+git branch Jmeter
+- CheckLists
+git branch CheckLists
+- Bug Reports
+git branch Bug_Reports
+- SQL
+git branch SQL
+- Charles
+git branch Charles
+- Mobile testing
+git branch Mobile_testing
+* * *
+2.	Запушить все ветки на внешний репозиторий.
+git commit -m "new branches"
+git push -u origin Postman Jmeter CheckLists Bug_Reports SQL Charles Mobile_testing
+* * *
+3.	В ветке Bug Reports сделать текстовый документ со структурой баг репорта.
+git checkout Bug_Reports
+cat > BugReport.txt
+1) ID
+2) Summary
+3) Description
+4) STR
+5) Reproducibility
+6) Severity
+7) Priority
+8) Symptom
+9) Workaround
+10) Comments
+11) Attachments
+* * *
+4.	Запушить структуру багрепорта на внешний репозиторий.
+git add BugReport.txt
+git commit -m "Bug Report structure"
+git push
+* * *
+5.	Вмержить ветку Bug Reports в Main.
+git checkout main
+git merge Bug_Reports -m "Bug Reports"
+* * *
+6.	Запушить main на внешний репозиторий.
+git push
+* * *
+7.	В ветке CheckLists набросать структуру чек листа.
+git checkout CheckLists
+touch CheckList.txt
+vim CheckList.txt
+1) ID
+2) Idea
+3) Result
+* * *
+8.	Запушить структуру на внешний репозиторий.
+git add CheckList.txt
+git commit -m "CheckList structure"
+git push
+* * *
+9.	На внешнем репозитории сделать Pull Request ветки CheckLists в main.
+GitHub/Pull request
+* * *
+10.	Синхронизировать Внешнюю и Локальную ветки Main.
+git pull
+* * *
