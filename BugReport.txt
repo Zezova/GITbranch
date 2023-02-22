@@ -1,0 +1,11 @@
+1) ID
+2) Summary
+3) Description
+4) STR
+5) Reproducibility
+6) Severity
+7) Priority
+8) Symptom
+9) Workaround
+10) Comments
+11) Attachments
