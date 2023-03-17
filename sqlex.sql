@@ -17,4 +17,14 @@ SELECT * FROM Printer WHERE color = 'y'
 SELECT model, speed, hd FROM PC
 WHERE cd IN ('12x', '24x')
 AND price < 600
-
+* * *
+6) Для каждого производителя, выпускающего ПК-блокноты c объёмом жесткого диска не менее 10 Гбайт, найти скорости таких ПК-блокнотов. Вывод: производитель, скорость.
+SELECT maker, speed FROM Laptop
+JOIN
+(SELECT * FROM Product
+WHERE type = 'laptop')
+Product
+ON Laptop.model = Product.model
+WHERE hd >= 10
+GROUP BY maker, speed
+* * *
