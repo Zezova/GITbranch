@@ -119,3 +119,106 @@ WHERE type = 'pc'
 GROUP BY maker
 HAVING COUNT(model) >= 3
 * * *
+21) Найдите максимальную цену ПК, выпускаемых каждым производителем, у которого есть модели в таблице PC. Вывести: maker, максимальная цена.
+SELECT maker, MAX(price) AS max_price
+FROM PC JOIN Product
+ON Product.model = PC.model
+GROUP BY maker
+* * *
+22) Для каждого значения скорости ПК, превышающего 600 МГц, определите среднюю цену ПК с такой же скоростью. Вывести: speed, средняя цена.
+SELECT speed, AVG(price) AS avg_price
+FROM PC
+WHERE speed > 600
+GROUP BY speed
+* * *
+23) Найдите производителей, которые производили бы как ПК со скоростью не менее 750 МГц, так и ПК-блокноты со скоростью не менее 750 МГц. Вывести: Maker
+SELECT maker FROM PC JOIN Product
+ON Product.model = PC.model
+WHERE speed >= 750
+AND maker IN 
+(SELECT maker FROM Laptop JOIN Product
+ON Product.model = Laptop.model
+WHERE speed >= 750)
+GROUP BY maker
+* * *
+24) Перечислите номера моделей любых типов, имеющих самую высокую цену по всей имеющейся в базе данных продукции.
+SELECT model FROM (
+SELECT model, price FROM PC
+UNION
+SELECT model, price FROM Laptop
+UNION
+SELECT model, price FROM Printer
+) AS table1
+WHERE price = (
+SELECT MAX(price) FROM (
+SELECT model, price FROM PC
+UNION
+SELECT model, price FROM Laptop
+UNION
+SELECT model, price FROM Printer
+) AS table2)
+* * *
+25) Найдите производителей принтеров, которые производят ПК с наименьшим объемоv RAM и с самым быстрым процессором среди всех ПК, имеющих наименьший объем RAM. Вывести: Maker
+SELECT DISTINCT maker
+FROM PC JOIN Product
+ON Product.model = PC.model
+WHERE maker IN
+(SELECT DISTINCT maker FROM Product
+WHERE type = 'printer')
+AND speed = (SELECT MAX(speed) FROM PC
+WHERE ram = (SELECT MIN(ram) FROM PC))
+AND ram = (SELECT MIN(ram) FROM PC)
+* * *
+26) Найдите среднюю цену ПК и ПК-блокнотов, выпущенных производителем A (латинская буква). Вывести: одна общая средняя цена.
+SELECT SUM(prices) / SUM(models) AS avg_price FROM (
+SELECT COUNT(PC.model) AS models, SUM(price) AS prices
+FROM PC JOIN Product
+ON Product.model = PC.model
+WHERE maker = 'A'
+UNION
+SELECT COUNT(Laptop.model), SUM(price)
+FROM Laptop JOIN Product
+ON Product.model = Laptop.model
+WHERE maker = 'A') AS table1
+* * *
+27) Найдите средний размер диска ПК каждого из тех производителей, которые выпускают и принтеры. Вывести: maker, средний размер HD.
+SELECT maker, AVG(hd) AS avg_hd
+FROM PC JOIN Product
+ON Product.model = PC.model
+WHERE maker IN
+(SELECT DISTINCT maker
+FROM Product
+WHERE type = 'printer')
+GROUP BY maker
+* * *
+28) Используя таблицу Product, определить количество производителей, выпускающих по одной модели.
+SELECT COUNT(maker) AS count_maker
+FROM
+(SELECT maker FROM Product
+GROUP BY maker
+HAVING COUNT(*) = 1) AS table1
+* * *
+29) В предположении, что приход и расход денег на каждом пункте приема фиксируется не чаще одного раза в день [т.е. первичный ключ (пункт, дата)], написать запрос с выходными данными (пункт, дата, приход, расход). Использовать таблицы Income_o и Outcome_o.
+SELECT Income_o.point, Income_o.[date], inc, out
+FROM Income_o LEFT JOIN Outcome_o
+ON Outcome_o.point = Income_o.point
+AND Outcome_o.[date] = Income_o.[date]
+UNION
+SELECT Outcome_o.point, Outcome_o.[date], inc, out
+FROM Income_o RIGHT JOIN Outcome_o
+ON Outcome_o.point = Income_o.point
+AND Outcome_o.[date] = Income_o.[date]
+* * *
+30) В предположении, что приход и расход денег на каждом пункте приема фиксируется произвольное число раз (первичным ключом в таблицах является столбец code), требуется получить таблицу, в которой каждому пункту за каждую дату выполнения операций будет соответствовать одна строка.
+Вывод: point, date, суммарный расход пункта за день (out), суммарный приход пункта за день (inc). Отсутствующие значения считать неопределенными (NULL).
+SELECT point, [date], SUM(outs), SUM(incs)
+FROM
+(SELECT point, [date], SUM(out) AS outs, NULL AS incs
+FROM Outcome
+GROUP BY point, [date]
+UNION
+SELECT point, [date], NULL, SUM(inc)
+FROM Income
+GROUP BY point, [date]) AS table1
+GROUP BY point, [date]
+* * *
