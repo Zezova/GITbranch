@@ -250,4 +250,3 @@ join roles_employee re on e.id = re.role_id
 join roles r on re.role_id = r.id
 where monthly_salary in (1100, 1500, 2000)
 order by monthly_salary;
-* * *
