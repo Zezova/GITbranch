@@ -222,5 +222,4 @@ select * from employees;
 select * from salary;
 select * from employee_salary;
 select * from roles;
-select * from roles_employee;
-      
+select * from roles_employee;      
